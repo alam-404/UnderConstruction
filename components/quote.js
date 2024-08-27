@@ -1,10 +1,19 @@
 'use client'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeftAlt } from "@fortawesome/free-solid-svg-icons";
+import { getRandomQuote } from "@/lib/randomQuote";
+import Swal from 'sweetalert2'
 
 const Quote = () => {
 
   const getQuote = async () => {
+    const quote = await getRandomQuote();
+    console.log(quote)
+    Swal.fire({
+      title: 'Quote',
+      text: `${quote.q}\n - ${quote.a}`,
+      confirmButtonText: 'Cool'
+    })
   }
 
   return (

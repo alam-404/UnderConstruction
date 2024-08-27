@@ -1,50 +1,59 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
-export default function CustomCursor() {
-  const cursorRef = useRef(null);
+const CustomCursor = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    const cursor = cursorRef.current;
-
-    const handleMouseMove = (e) => {
-      if (cursor) {
-        cursor.style.left = `${e.clientX}px`;
-        cursor.style.top = `${e.clientY}px`;
-      }
+    const mouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleMouseEnter = () => {
-      if (cursor) {
-        cursor.style.transform = "scale(1.5)";
-        cursor.style.opacity = "0.8";
-        cursor.style.background = "radial-gradient(circle, #feca57, #ff6b6b, #54a0ff, #5f27cd, #1dd1a1)";
-      }
+      setIsHovered(true);
     };
-
     const handleMouseLeave = () => {
-      if (cursor) {
-        cursor.style.transform = "scale(1)";
-        cursor.style.opacity = "1";
-        cursor.style.background = "radial-gradient(circle, #ff6b6b, #feca57, #1dd1a1, #5f27cd, #54a0ff)";
-      }
+      setIsHovered(false);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.querySelectorAll("a, button, .hover-target").forEach((el) => {
+    window.addEventListener("mousemove", mouseMove);
+
+    // Attach event listeners to all elements that require hover interaction
+    const hoverElements = document.querySelectorAll("div,h2, p, span");
+    hoverElements.forEach((el) => {
       el.addEventListener("mouseenter", handleMouseEnter);
       el.addEventListener("mouseleave", handleMouseLeave);
     });
 
+    // Cleanup event listeners on component unmount
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.querySelectorAll("a, button, .hover-target").forEach((el) => {
+      window.removeEventListener("mousemove", mouseMove);
+      hoverElements.forEach((el) => {
         el.removeEventListener("mouseenter", handleMouseEnter);
         el.removeEventListener("mouseleave", handleMouseLeave);
       });
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on mount
 
-  return <div ref={cursorRef} className="custom-cursor"></div>;
-}
+  return (
+    <motion.div
+      className={`custom-cursor`}
+      style={{
+        x: mousePosition.x - 10, // Adjust x and y for centering
+        y: mousePosition.y - 10,
+      }}
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        scale: isHovered ? 3 : 1,
+        backgroundColor: isHovered ? "#ffffff" : "rgba(255, 107, 107, 1)",
+      }}
+      transition={{ duration: 0.2 }}
+    />
+  );
+};
+
+export default CustomCursor;

@@ -9,8 +9,7 @@ body {
   background-position: center;
   margin: 0; 
   height: 100vh; 
-  cursor: none;
-
+  /* cursor: none; */
 }
 
 .custom-cursor {
@@ -43,7 +42,7 @@ body {
 .typewriter {
   display: inline-block;
   overflow: hidden; 
-  white-space: nowrap; 
+  white-space: nowrap;
   border-right: 0.15em solid rgb(248, 248, 248); 
   animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
 }
@@ -90,3 +89,12 @@ body {
   }
 }
 
+
+#pupil1 {
+  left: var(--x);
+  top: var(--y);
+}
+#pupil2 {
+  left: var(--x);
+  top: var(--y);
+}
